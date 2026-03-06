@@ -178,16 +178,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v4
 
       # Configure Docker for Multi-Arch Images
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1.2.0
+        uses: docker/setup-qemu-action@v3
 
       # Login to DockerHub when no pull request
       - name: Login to DockerHub
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -195,7 +195,7 @@ jobs:
       # Configure the Docker Image Meta Data
       - name: Docker Meta
         id: docker_meta
-        uses: docker/metadata-action@v3.4.1
+        uses: docker/metadata-action@v5
         with:
           # list of Docker images to use as base name for tags
           images: |
@@ -208,7 +208,7 @@ jobs:
       # Build and push the image
       - name: Build and Push
         id: docker_build
-        uses: docker/build-push-action@v2.6.1
+        uses: docker/build-push-action@v6
         with:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.docker_meta.outputs.tags }}
@@ -264,7 +264,7 @@ To do this, we need to add a new job to our GitHub Actions. This will start the 
       runs-on: ubuntu-latest
       steps:
          - name: Checkout
-           uses: actions/checkout@v2.3.4
+           uses: actions/checkout@v4
 
          - name: Test
            run: |

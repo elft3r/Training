@@ -126,27 +126,34 @@ rtt min/avg/max/mdev = 0.049/0.053/0.069/0.012 ms
 
 Press `Ctrl-C` to stop the ping. The replies above show that the Docker host can ping the container over the **bridge** network.
 
-Log in to the container, install the `ping`
- program and ping `www.docker.com`.
+Log in to the container, install the `ping` program and ping `www.docker.com`.
 
- ```
-### Get the ID of the container started in the previous step.
+Get the ID of the container started in the previous step.
+
+```
 $ docker ps
 CONTAINER ID    IMAGE    COMMAND             CREATED  STATUS  NAMES
 6dd93d6cdc80    ubuntu   "sleep infinity"    5 mins   Up      reverent_dubinsky
+```
 
-### Exec into the container
+Exec into the container.
+
+```
 $ docker exec -it 6dd93d6cdc80 /bin/bash
+```
 
-### Update APT package lists and install the iputils-ping package
+Update APT package lists and install the iputils-ping package.
+
+```
 root@6dd93d6cdc80:/# apt-get update
  <Snip>
 
- apt-get install iputils-ping
+root@6dd93d6cdc80:/# apt-get install iputils-ping
  Reading package lists... Done
 <Snip>
+```
 
-### Ping www.docker.com from within the container
+Ping www.docker.com from within the container.
 
 ```
 root@6dd93d6cdc80:/# ping www.docker.com
@@ -171,26 +178,26 @@ In this step we'll start a new **NGINX** container and map port 8080 on the Dock
 
 Start a new container based off the official NGINX image.
 
-    ```
-    $ docker run --name web1 -d -p 8080:80 nginx
-    Unable to find image 'nginx:latest' locally
-    latest: Pulling from library/nginx
-    386a066cd84a: Pull complete
-    7bdb4b002d7f: Pull complete
-    49b006ddea70: Pull complete
-    Digest: sha256:9038d5645fa5fcca445d12e1b8979c87f46ca42cfb17beb1e5e093785991a639
-    Status: Downloaded newer image for nginx:latest
-    b747d43fa277ec5da4e904b932db2a3fe4047991007c2d3649e3f0c615961038
-    ```
+```
+$ docker run --name web1 -d -p 8080:80 nginx
+Unable to find image 'nginx:latest' locally
+latest: Pulling from library/nginx
+386a066cd84a: Pull complete
+7bdb4b002d7f: Pull complete
+49b006ddea70: Pull complete
+Digest: sha256:9038d5645fa5fcca445d12e1b8979c87f46ca42cfb17beb1e5e093785991a639
+Status: Downloaded newer image for nginx:latest
+b747d43fa277ec5da4e904b932db2a3fe4047991007c2d3649e3f0c615961038
+```
 
 Check that the container is running and view the port mapping.
 
-    ```
-    $ docker ps
-    CONTAINER ID    IMAGE               COMMAND                  CREATED             STATUS              PORTS                           NAMES
-    b747d43fa277   nginx               "nginx -g 'daemon off"   3 seconds ago       Up 2 seconds        443/tcp, 0.0.0.0:8080->80/tcp   web1
-    6dd93d6cdc80        ubuntu              "sleep infinity"         About an hour ago   Up About an hour                                    reverent_dubinsky
-    ```
+```
+$ docker ps
+CONTAINER ID    IMAGE               COMMAND                  CREATED             STATUS              PORTS                           NAMES
+b747d43fa277   nginx               "nginx -g 'daemon off"   3 seconds ago       Up 2 seconds        443/tcp, 0.0.0.0:8080->80/tcp   web1
+6dd93d6cdc80        ubuntu              "sleep infinity"         About an hour ago   Up About an hour                                    reverent_dubinsky
+```
 
 There are two containers listed in the output above. The top line shows the new **web1** container running NGINX. Take note of the command the container is running as well as the port mapping - `0.0.0.0:8080->80/tcp` maps port 8080 on all host interfaces to port 80 inside the **web1** container. This port mapping is what effectively makes the containers web service accessible from external sources (via the Docker hosts IP address on port 8080).
 
@@ -200,23 +207,23 @@ To complete the following task you will need the IP address of your Docker host.
 
 Point your web browser to the IP and port 8080 of your Docker host. The following example shows a web browser pointed to `52.213.169.69:8080`
 
-![](concepts/img/browser.png)
+If everything is working you should see the default NGINX welcome page.
 
 If you try connecting to the same IP address on a different port number it will fail.
 
-If for some reason you cannot open a session from a web broswer, you can connect from your Docker host using the `curl` command.
+If for some reason you cannot open a session from a web browser, you can connect from your Docker host using the `curl` command.
 
-    ```
-    $ curl 127.0.0.1:8080
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <title>Welcome to nginx!</title>
-        <Snip>
-    <p><em>Thank you for using nginx.</em></p>
-    </body>
-    </html>
-    ```
+```
+$ curl 127.0.0.1:8080
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+    <Snip>
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+```
 
 
 If you try and curl the IP address on a different port number it will fail.
@@ -224,4 +231,4 @@ If you try and curl the IP address on a different port number it will fail.
 > **NOTE:** The port mapping is actually port address translation (PAT).
 
 ## Next Steps
-For the next step in the tutorial, head over to [Docker Networking](./bridge-network.md)
+For the next step in the tutorial, head over to [Docker Secrets](./secrets.md)

@@ -51,7 +51,7 @@ Let's re-run the command with some new flags to publish ports and pass your name
    The command summary the above command:
 
    - `--detach` will create a container with the process detached from our terminal
-   - `-publish-all` will publish all the exposed container ports to random ports on the Docker host
+   - `--publish-all` will publish all the exposed container ports to random ports on the Docker host
    - `--env` is how you pass environment variables to the container
    - `--name` allows you to specify a container name
    - `AUTHOR` is the environment variable name and `Your Name` is the value that you can pass
@@ -95,7 +95,7 @@ Let's re-run the command with some new flags to publish ports and pass your name
 8. Let's use a shortcut to remove the second site:
 
    ```
-   $ docker container rm -f static-site-2 static-site-3
+   $ docker container rm -f static-site-2
    ```
 
    > **Note:** `rm -f` is the not nice way of removing containers. Be warned

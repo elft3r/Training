@@ -217,5 +217,5 @@ $ docker network rm my-network
 
 ```
 
-## Next Steps, Web Apps
-For the next step in the tutorial, head over to [Webapps with Docker](./webapps.md)
+## Next Steps
+For the next step in the tutorial, head over to [Bridge Networking](./bridge-network.md)

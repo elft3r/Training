@@ -10,7 +10,7 @@ Great! So you have now looked at `docker container run`, played with Docker cont
 
 ## Task 1: Docker Images
 
-In this section, we dive into Docker images. You will build your own image, use that image to run an application locally, and finally, push the newly create images to Docker Cloud.
+In this section, we dive into Docker images. You will build your own image, use that image to run an application locally, and finally, push the newly created images to Docker Hub.
 
 The [Docker documentation](https://docs.docker.com/engine/userguide/storagedriver/imagesandcontainers/) gives a great explanation on how storage works with Docker images and containers, but here's the highlights.
 
@@ -26,17 +26,17 @@ The [Docker documentation](https://docs.docker.com/engine/userguide/storagedrive
 A Docker image is built up from a series of layers. Each layer represents an instruction in the image’s Dockerfile. Each layer except the very last one is read-only. Consider the following Dockerfile:
 
 ```
-    FROM ubuntu:15.04
+    FROM debian:bookworm-slim
     COPY . /app
     RUN make /app
     CMD python /app/app.py
 ```
 
-This Dockerfile contains four commands, each of which creates a layer. The `FROM` statement starts out by creating a layer from the ubuntu:15.04 image. The `COPY` command adds some files from your Docker client’s current directory. The `RUN` command builds your application using the make command. Finally, the last layer specifies what command to run within the container.
+This Dockerfile contains four commands, each of which creates a layer. The `FROM` statement starts out by creating a layer from the debian:bookworm-slim image. The `COPY` command adds some files from your Docker client’s current directory. The `RUN` command builds your application using the make command. Finally, the last layer specifies what command to run within the container.
 
 <center><img src="../images/container-layers.jpg" title="Container Layers"></center>
 
-Multiple Containers can use the same Image. Each container has its own writable container layer, and all changes are stored in this container layer, multiple containers can share access to the same underlying image and yet have their own data state. The diagram below shows multiple containers sharing the same Ubuntu 15.04 image.
+Multiple Containers can use the same Image. Each container has its own writable container layer, and all changes are stored in this container layer, multiple containers can share access to the same underlying image and yet have their own data state. The diagram below shows multiple containers sharing the same Debian image.
 
 <center><img src="../images/sharing-layers.jpg" title="Sharing Layers"></center>
 
@@ -51,32 +51,32 @@ $ docker images
 REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE
 dockersamples/static-site   latest              92a386b6e686        2 hours ago        190.5 MB
 nginx                       latest              af4b3d7d5401        3 hours ago        190.5 MB
-python                      2.7                 1c32174fd534        14 hours ago        676.8 MB
-postgres                    9.4                 88d845ac7a88        14 hours ago        263.6 MB
-containous/traefik          latest              27b4e0c6b2fd        4 days ago          20.75 MB
-node                        0.10                42426a5cba5f        6 days ago          633.7 MB
+python                      3.12                1c32174fd534        14 hours ago        676.8 MB
+postgres                    17                  88d845ac7a88        14 hours ago        432.5 MB
+traefik                     latest              27b4e0c6b2fd        4 days ago          160.7 MB
+node                        22                  42426a5cba5f        6 days ago          633.7 MB
 redis                       latest              4f5f397d4b7c        7 days ago          177.5 MB
 mongo                       latest              467eb21035a8        7 days ago          309.7 MB
-alpine                      3.3                 70c557e50ed6        8 days ago          4.794 MB
-java                        7                   21f6ce84e43c        8 days ago          587.7 MB
+alpine                      latest              70c557e50ed6        8 days ago          7.8 MB
+debian                      bookworm-slim       21f6ce84e43c        8 days ago          74.8 MB
 ```
 
 Above is a list of images that we've pulled from the Docker registry and images I created myself (we'll shortly see how). You will have a different list of images on your machine. The `TAG` refers to a particular snapshot of the image and the `ID` is the corresponding unique identifier or hash for that image.
 
 For simplicity, you can think of an image functions similarly to a git repository - images can be [committed](https://docs.docker.com/engine/reference/commandline/commit/) with changes and have multiple versions. When you do not provide a specific version number, the client defaults to `latest`.
 
-1. Pull a specific version of `ubuntu` image as follows:
+1. Pull a specific version of `debian` image as follows:
 
    ```
-   $ docker image pull ubuntu:12.04
+   $ docker image pull debian:bullseye-slim
    ```
 
    _Note_ If you do not specify the version number of the image then, as mentioned, the Docker client will default to a version named `latest`.
 
-2. So for example, the `docker image pull` command given below will always pull the `latest` tag of an image. The example below pulls `ubuntu:latest` by default.
+2. So for example, the `docker image pull` command given below will always pull the `latest` tag of an image. The example below pulls `debian:latest` by default.
 
    ```
-   $ docker image pull ubuntu
+   $ docker image pull debian
    ```
 
 To get a new Docker image you can either get it from a registry (such as the Docker Hub) or create your own. There are hundreds of thousands of images available on [Docker Hub](https://hub.docker.com). You can also search for images directly from the command line using `docker search`.
@@ -89,29 +89,29 @@ An important distinction with regard to images is between _base images_ and _chi
 
 Another key concept is the idea of _official images_ and _user images_. (Both of which can be base images or child images.)
 
-- **Official images** are Docker-sanctioned images. Docker, Inc. sponsors a dedicated team that is responsible for reviewing and publishing all Official Repositories content. This team works in collaboration with upstream software maintainers, security experts, and the broader Docker community. These are not prefixed by an organization or user name. In the list of images above, the `python`, `node`, `alpine` and `nginx` images are official (base) images. To find out more about them, check out the [Official Images Documentation](https://docs.docker.com/docker-hub/official_repos/).
+- **Official images** are Docker-sanctioned images. Docker, Inc. sponsors a dedicated team that is responsible for reviewing and publishing all Official Repositories content. This team works in collaboration with upstream software maintainers, security experts, and the broader Docker community. These are not prefixed by an organization or user name. In the list of images above, the `python`, `node`, `alpine`, `debian` and `nginx` images are official (base) images. To find out more about them, check out the [Official Images Documentation](https://docs.docker.com/docker-hub/official_repos/).
 
 - **User images** are images created and shared by users like you. They build on base images and add additional functionality. Typically these are formatted as `user/image-name`. The `user` value in the image name is your Docker Hub user or organization name.
 
 ## Task 2: Layers and Copy on Write
 
-1. Pull the Debian:Buster image
+1. Pull the Debian Bookworm Slim image
 
    ```
-   $ docker image pull ubuntu:jammy
-   jammy: Pulling from library/ubuntu
+   $ docker image pull debian:bookworm-slim
+   bookworm-slim: Pulling from library/debian
    952b15bbc7fb: Pull complete
    Digest: sha256:ac58ff7fe25edc58bdf0067ca99df00014dbd032e2246d30a722fa348fd799a5
-   Status: Downloaded newer image for ubuntu:jammy
-   docker.io/library/ubuntu:jammy
+   Status: Downloaded newer image for debian:bookworm-slim
+   docker.io/library/debian:bookworm-slim
    ```
 
-2. Pull a MariaDB image
+2. Pull a PostgreSQL image
 
    ```
-   $ docker image pull mariadb:11
-   11: Pulling from library/mariadb
-   6c7698a779f6: Already exists
+   $ docker image pull postgres:17
+   17: Pulling from library/postgres
+   952b15bbc7fb: Already exists
    c3beef926275: Pull complete
    dd40ffbb6cb3: Pull complete
    31691bc52e3b: Pull complete
@@ -120,30 +120,32 @@ Another key concept is the idea of _official images_ and _user images_. (Both of
    91656c5c74a8: Pull complete
    fbc99aa6f426: Pull complete
    Digest: sha256:b85481f8f2a65c10dec198e562a751676e926da83018e5590d00be86e5c9f635
-   Status: Downloaded newer image for mariadb:11
-   docker.io/library/mariadb:11
+   Status: Downloaded newer image for postgres:17
+   docker.io/library/postgres:17
    ```
 
-   What do you notice about the output from the Docker pull request for MySQL?
+   What do you notice about the output from the Docker pull request for PostgreSQL?
 
    The first layer pulled says:
 
-   `6c7698a779f6: Already exists`
+   `952b15bbc7fb: Already exists`
 
-   Notice that the layer id (`6c7698a779f6`) is the same for the first layer of the MySQl image and the only layer in the Debian:Jessie image. And because we already had pulled that layer when we pulled the Debian image, we didn't have to pull it again.
+   Notice that the layer id (`952b15bbc7fb`) is the same for the first layer of the PostgreSQL image and the only layer in the Debian Bookworm Slim image. And because we already had pulled that layer when we pulled the Debian image, we didn't have to pull it again.
 
-   So, what does that tell us about the MySQL image? Since each layer is created by a line in the image's _Dockerfile_, we know that the MySQL image is based on the Debian:Jessie base image. We can confirm this by looking at the [Dockerfile for the Docker Hub](https://github.com/MariaDB/mariadb-docker/blob/e56b3a008e9c47c7199d28db6d77d2cfecde526d/11.0/Dockerfile).
+   So, what does that tell us about the PostgreSQL image? Since each layer is created by a line in the image's _Dockerfile_, we know that the PostgreSQL image is based on the Debian Bookworm Slim base image. We can confirm this by looking at the [Dockerfile on GitHub](https://github.com/docker-library/postgres/blob/master/17/bookworm/Dockerfile).
 
-   The first line in the the Dockerfile is: `FROM ubuntu:jammy` This will import that layer into the MySQL image.
+   The first line in the Dockerfile is: `FROM debian:bookworm-slim` This will import that layer into the PostgreSQL image.
 
    So layers are created by the Dockerfile and are shared between images. When you start a container, a writeable layer is added to the base image.
 
    Next you will create a file in our container, and see how that's represented on the host file system.
 
+   > **Note:** Not all database images share the same base. For instance, MariaDB is based on `ubuntu:noble`, not Debian. If you pulled `mariadb:11` after `debian:bookworm-slim`, you would **not** see shared layers, because they use different base images. Always check an image's Dockerfile to understand its lineage.
+
 3. Start a Debian container, shell into it.
 
    ```
-   $ docker run --tty --interactive --name debian debian:stretch-slim bash
+   $ docker run --tty --interactive --name mydebian debian:bookworm-slim bash
    root@e09203d84deb:/#
    ```
 
@@ -155,9 +157,9 @@ Another key concept is the idea of _official images_ and _user images_. (Both of
    bin  boot  dev	etc  home  lib	lib64  media  mnt  opt	proc  root  run  sbin  srv  sys  test-file  tmp  usr  var
    ```
 
-   We can see `test-file` exists in the root of the containers file system.
+   We can see `test-file` exists in the root of the container's file system.
 
-   What has happened is that when a new file was written to the disk, the Docker storage driver placed that file in it's own layer. This is called _copy on write_ - as soon as a change is detected the change is copied into the writeable layer. That layers is represented by a directory on the host file system. All of this is managed by the Docker storage driver.
+   What has happened is that when a new file was written to the disk, the Docker storage driver placed that file in its own layer. This is called _copy on write_ - as soon as a change is detected the change is copied into the writeable layer. That layer is represented by a directory on the host file system. All of this is managed by the Docker storage driver.
 
 5. Exit the container but leave it running by pressing `ctrl-p` and then `ctrl-q`
 
@@ -170,27 +172,27 @@ Another key concept is the idea of _official images_ and _user images_. (Both of
 6. Stop the container
 
    ```
-   $ docker container stop debian
+   $ docker container stop mydebian
    ```
 
-7. Ensure that your debian container still exists
+7. Ensure that your container still exists
 
    ```
    $ docker container ls --all
-   CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS           PORTS               NAMES
-   674d7abf10c6        debian:stretch-slim "bash"              36 minutes ago      Exited (0) 2 minutes ago                       debian
+   CONTAINER ID        IMAGE                  COMMAND             CREATED             STATUS           PORTS               NAMES
+   674d7abf10c6        debian:bookworm-slim   "bash"              36 minutes ago      Exited (0) 2 minutes ago                       mydebian
    ```
 
 8. Start the Debian container again
 
    ```
-   $ docker container start debian
+   $ docker container start mydebian
    ```
 
-9. Attach to the Debian container hit `enter` twice after completing the command
+9. Attach to the container, hit `enter` twice after completing the command
 
    ```
-   $ docker container attach debian
+   $ docker container attach mydebian
    ```
 
    Because the container still exists, the files are still available on your file system. At this point the file we created previously still exists.
@@ -200,8 +202,8 @@ Another key concept is the idea of _official images_ and _user images_. (Both of
 10. Remove the container and list the directory contents
 
     ```
-    $ docker container rm debian
-    debian
+    $ docker container rm mydebian
+    mydebian
     ```
 
     The files that were created are now gone and the container now reverts back to the base image which it was created from if we start it again.
@@ -218,11 +220,11 @@ Volumes can be anonymous or named. Anonymous volumes have no way to be explicitl
 
 The next sections will cover both anonymous and named volumes.
 
-> Special Note: These next sections were adapted from [Arun Gupta's](https://twitter.com/arungupta) excellent [tutorial](http://blog.arungupta.me/docker-mysql-persistence/)(Outdated) on persisting data with MySQL.
+> Special Note: These next sections were adapted from [Arun Gupta's](https://twitter.com/arungupta) excellent [tutorial](http://blog.arungupta.me/docker-mysql-persistence/) on persisting data with Docker databases.
 
 ### Anonymous Volumes
 
-Take a look at the MySQL [Dockerfile](https://github.com/docker-library/mysql/blob/0590e4efd2b31ec794383f084d419dea9bc752c4/5.7/Dockerfile) you will find the following line:
+Take a look at the MariaDB [Dockerfile](https://github.com/MariaDB/mariadb-docker/blob/master/11.4/Dockerfile) you will find the following line:
 
 ```
 VOLUME /var/lib/mysql
@@ -232,10 +234,10 @@ This line sets up an anonymous volume in order to increase database performance 
 
 > **Note:** An anonymous volume is a volume that hasn't been explicitly named. This means that it's extremely difficult to use the volume later with a new container. Named volumes solve that problem, and will be covered later in this section.
 
-1. Start a MySQL container
+1. Start a MariaDB container
 
    ```
-   $ docker run --name mysqldb -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=sample -e MYSQL_ROOT_PASSWORD=supersecret -d mysql
+   $ docker run --name mariadb -e MARIADB_USER=dbuser -e MARIADB_PASSWORD=dbpass -e MARIADB_DATABASE=sample -e MARIADB_ROOT_PASSWORD=supersecret -d mariadb:11
    acf185dc16e274b2f332266a1bfc6d1df7d7b4f780e6a7ec6716b40cafa5b3c3
    ```
 
@@ -244,29 +246,24 @@ This line sets up an anonymous volume in order to increase database performance 
 2. Use Docker inspect to view the details of the anonymous volume
 
    ```
-   $ docker inspect -f "in the {{.Name}} container {{(index .Mounts 0).Destination}} is mapped to {{(index .Mounts 0).Source}}" mysqldb
+   $ docker inspect -f "in the {{.Name}} container {{(index .Mounts 0).Destination}} is mapped to {{(index .Mounts 0).Source}}" mariadb
    ```
 
-   This command will return: `in the /mysqldb container /var/lib/mysql is mapped to /var/lib/docker/volumes/cd79b3301df29d13a068d624467d6080354b81e34d794b615e6e93dd61f89628/_data`
+   This command will return: `in the /mariadb container /var/lib/mysql is mapped to /var/lib/docker/volumes/cd79b3301df29d13a068d624467d6080354b81e34d794b615e6e93dd61f89628/_data`
 
    As mentioned anonymous volumes will not persist data between containers, they are almost always used to increase performance.
 
-3. Shell into your running MySQL container and log into MySQL
+3. Shell into your running MariaDB container and log into MariaDB
 
    ```
-   $ docker exec --tty --interactive mysqldb bash
+   $ docker exec --tty --interactive mariadb bash
 
-   root@132f4b3ec0dc:/# mysql --user=mysql --password=mysql
-   mysql: [Warning] Using a password on the command line interface can be insecure.
-   Welcome to the MySQL monitor.  Commands end with ; or \g.
-   Your MySQL connection id is 3
-   Server version: 5.7.19 MySQL Community Server (GPL)
+   root@132f4b3ec0dc:/# mariadb --user=dbuser --password=dbpass
+   Welcome to the MariaDB monitor.  Commands end with ; or \g.
+   Your MariaDB connection id is 3
+   Server version: 11.4.2-MariaDB-ubu2404 mariadb.org binary distribution
 
-   Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
-
-   Oracle is a registered trademark of Oracle Corporation and/or its
-   affiliates. Other names may be trademarks of their respective
-   owners.
+   Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
 
    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
    ```
@@ -274,7 +271,7 @@ This line sets up an anonymous volume in order to increase database performance 
 4. Create a new table
 
    ```
-   mysql> show databases;
+   MariaDB [(none)]> show databases;
    +--------------------+
    | Database           |
    +--------------------+
@@ -283,17 +280,16 @@ This line sets up an anonymous volume in order to increase database performance 
    +--------------------+
    2 rows in set (0.00 sec)
 
-   mysql> connect sample;
-   Connection id:    4
-   Current database: sample
+   MariaDB [(none)]> use sample;
+   Database changed
 
-   mysql> show tables;
+   MariaDB [sample]> show tables;
    Empty set (0.00 sec)
 
-   mysql> create table user(name varchar(50));
+   MariaDB [sample]> create table user(name varchar(50));
    Query OK, 0 rows affected (0.01 sec)
 
-   mysql> show tables;
+   MariaDB [sample]> show tables;
    +------------------+
    | Tables_in_sample |
    +------------------+
@@ -302,10 +298,10 @@ This line sets up an anonymous volume in order to increase database performance 
    1 row in set (0.00 sec)
    ```
 
-5. Exit MySQL and the MySQL container.
+5. Exit MariaDB and the MariaDB container.
 
    ```
-   mysql> exit
+   MariaDB [sample]> exit
    Bye
 
    root@132f4b3ec0dc:/# exit
@@ -315,44 +311,38 @@ This line sets up an anonymous volume in order to increase database performance 
 6. Stop the container and restart it
 
    ```
-   $ docker stop mysqldb
-   mysqldb
+   $ docker stop mariadb
+   mariadb
 
-   $ docker start mysqldb
-   mysqldb
+   $ docker start mariadb
+   mariadb
    ```
 
-7. Shell back into the running container and log into MySQL
+7. Shell back into the running container and log into MariaDB
 
    ```
-   $ docker exec --interactive --tty mysqldb bash
+   $ docker exec --interactive --tty mariadb bash
 
-   root@132f4b3ec0dc:/# mysql --user=mysql --password=mysql
-   mysql: [Warning] Using a password on the command line interface can be insecure.
-   Welcome to the MySQL monitor.  Commands end with ; or \g.
-   Your MySQL connection id is 3
-   Server version: 5.7.19 MySQL Community Server (GPL)
+   root@132f4b3ec0dc:/# mariadb --user=dbuser --password=dbpass
+   Welcome to the MariaDB monitor.  Commands end with ; or \g.
+   Your MariaDB connection id is 3
+   Server version: 11.4.2-MariaDB-ubu2404 mariadb.org binary distribution
 
-   Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
-
-   Oracle is a registered trademark of Oracle Corporation and/or its
-   affiliates. Other names may be trademarks of their respective
-   owners.
+   Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
 
    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
    ```
 
-8. Ensure the table created previously table still exists
+8. Ensure the table created previously still exists
 
    ```
-   mysql> connect sample;
+   MariaDB [(none)]> use sample;
    Reading table information for completion of table and column names
    You can turn off this feature to get a quicker startup with -A
 
-   Connection id:    4
-   Current database: sample
+   Database changed
 
-   myslq> show tables;
+   MariaDB [sample]> show tables;
    +------------------+
    | Tables_in_sample |
    +------------------+
@@ -361,10 +351,10 @@ This line sets up an anonymous volume in order to increase database performance 
    1 row in set (0.00 sec)
    ```
 
-9. Exit MySQL and the MySQL container.
+9. Exit MariaDB and the MariaDB container.
 
    ```
-   mysql> exit
+   MariaDB [sample]> exit
    Bye
 
    root@132f4b3ec0dc:/# exit
@@ -376,8 +366,8 @@ This line sets up an anonymous volume in order to increase database performance 
 10. Let's look at the volume again
 
     ```
-    $ docker inspect -f "in the {{.Name}} container {{(index .Mounts 0).Destination}} is mapped to {{(index .Mounts 0).Source}}" mysqldb
-    in the /mysqldb container /var/lib/mysql is mapped to /var/lib/docker/volumes/cd79b3301df29d13a068d624467d6080354b81e34d794b615e6e93dd61f89628/_data
+    $ docker inspect -f "in the {{.Name}} container {{(index .Mounts 0).Destination}} is mapped to {{(index .Mounts 0).Source}}" mariadb
+    in the /mariadb container /var/lib/mysql is mapped to /var/lib/docker/volumes/cd79b3301df29d13a068d624467d6080354b81e34d794b615e6e93dd61f89628/_data
     ```
 
     We do see the volume was not affected by the container restart either.
@@ -386,64 +376,58 @@ This line sets up an anonymous volume in order to increase database performance 
 
     To examine that delete the old container, create a new one with the same command, and check to see if the table exists.
 
-11. Remove the current MySQL container
+11. Remove the current MariaDB container
 
     ```
-    $ docker container rm --force mysqldb
-    mysqldb
+    $ docker container rm --force mariadb
+    mariadb
     ```
 
 12. Start a new container with the same command that was used before
 
     ```
-    $ docker run --name mysqldb -e MYSQL_USER=mysql -e MYSQL_PASSWORD=mysql -e MYSQL_DATABASE=sample -e MYSQL_ROOT_PASSWORD=supersecret -d mysql
+    $ docker run --name mariadb -e MARIADB_USER=dbuser -e MARIADB_PASSWORD=dbpass -e MARIADB_DATABASE=sample -e MARIADB_ROOT_PASSWORD=supersecret -d mariadb:11
     eb15eb4ecd26d7814a8da3bb27cee1a23304fab1961358dd904db37c061d3798
     ```
 
 13. List out the volume details for the new container
 
     ```
-    $ docker inspect -f "in the {{.Name}} container {{(index .Mounts 0).Destination}} is mapped to {{(index .Mounts 0).Source}}" mysqldb
-    in the /mysqldb container /var/lib/mysql is mapped to /var/lib/docker/volumes/e0ffdc6b4e0cfc6e795b83cece06b5b807e6af1b52c9d0b787e38a48e159404a/_data
+    $ docker inspect -f "in the {{.Name}} container {{(index .Mounts 0).Destination}} is mapped to {{(index .Mounts 0).Source}}" mariadb
+    in the /mariadb container /var/lib/mysql is mapped to /var/lib/docker/volumes/e0ffdc6b4e0cfc6e795b83cece06b5b807e6af1b52c9d0b787e38a48e159404a/_data
     ```
 
     Notice this directory is different than before.
 
-14. Shell back into the running container and log into MySQL
+14. Shell back into the running container and log into MariaDB
 
     ```
-    $ docker exec --interactive --tty mysqldb bash
+    $ docker exec --interactive --tty mariadb bash
 
-    root@132f4b3ec0dc:/# mysql --user=mysql --password=mysql
-    mysql: [Warning] Using a password on the command line interface can be insecure.
-    Welcome to the MySQL monitor.  Commands end with ; or \g.
-    Your MySQL connection id is 3
-    Server version: 5.7.19 MySQL Community Server (GPL)
+    root@132f4b3ec0dc:/# mariadb --user=dbuser --password=dbpass
+    Welcome to the MariaDB monitor.  Commands end with ; or \g.
+    Your MariaDB connection id is 3
+    Server version: 11.4.2-MariaDB-ubu2404 mariadb.org binary distribution
 
-    Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
-
-    Oracle is a registered trademark of Oracle Corporation and/or its
-    affiliates. Other names may be trademarks of their respective
-    owners.
+    Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
 
     Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
     ```
 
-15. Check to see if table created previously table still exists
+15. Check to see if table created previously still exists
 
     ```
-    mysql> connect sample;
-    Connection id:    4
-    Current database: sample
+    MariaDB [(none)]> use sample;
+    Database changed
 
-    mysql> show tables;
+    MariaDB [sample]> show tables;
     Empty set (0.00 sec)
     ```
 
-16. Exit MySQL and the MySQL container.
+16. Exit MariaDB and the MariaDB container.
 
     ```
-    mysql> exit
+    MariaDB [sample]> exit
     Bye
 
     root@132f4b3ec0dc:/# exit
@@ -453,8 +437,8 @@ This line sets up an anonymous volume in order to increase database performance 
 17. Remove the container
 
     ```
-    docker container rm --force mysqldb
-    mysqldb
+    docker container rm --force mariadb
+    mariadb
     ```
 
 So while a volume was used to store the new table in the original container, because it wasn't a named volume the data could not be persisted between containers.
@@ -467,17 +451,17 @@ A named volume (as the name implies) is a volume that's been explicitly named an
 
 A named volume can be created on the command line, in a docker-compose file, and when you start a new container. They [CANNOT be created as part of the image's dockerfile](https://github.com/moby/moby/issues/30647).
 
-1. Start a MySQL container with a named volume (`mydbdata`)
+1. Start a MariaDB container with a named volume (`mydbdata`)
 
    ```
-   $ docker run --name mysqldb \
-   -e MYSQL_USER=mysql \
-   -e MYSQL_PASSWORD=mysql \
-   -e MYSQL_DATABASE=sample \
-   -e MYSQL_ROOT_PASSWORD=supersecret \
+   $ docker run --name mariadb \
+   -e MARIADB_USER=dbuser \
+   -e MARIADB_PASSWORD=dbpass \
+   -e MARIADB_DATABASE=sample \
+   -e MARIADB_ROOT_PASSWORD=supersecret \
    --detach \
    --mount type=volume,source=mydbdata,target=/var/lib/mysql \
-   mysql
+   mariadb:11
    ```
 
    Because the newly created volume is empty, Docker will copy over whatever existed in the container at `/var/lib/mysql` when the container starts.
@@ -514,22 +498,17 @@ A named volume can be created on the command line, in a docker-compose file, and
 
    Any data written to `/var/lib/mysql` in the container will be rerouted to `/var/lib/docker/volumes/mydbdata/_data` instead.
 
-4. Shell into your running MySQL container and log into MySQL
+4. Shell into your running MariaDB container and log into MariaDB
 
    ```
-   $ docker exec --tty --interactive mysqldb bash
+   $ docker exec --tty --interactive mariadb bash
 
-   root@132f4b3ec0dc:/# mysql --user=mysql --password=mysql
-   mysql: [Warning] Using a password on the command line interface can be insecure.
-   Welcome to the MySQL monitor.  Commands end with ; or \g.
-   Your MySQL connection id is 3
-   Server version: 5.7.19 MySQL Community Server (GPL)
+   root@132f4b3ec0dc:/# mariadb --user=dbuser --password=dbpass
+   Welcome to the MariaDB monitor.  Commands end with ; or \g.
+   Your MariaDB connection id is 3
+   Server version: 11.4.2-MariaDB-ubu2404 mariadb.org binary distribution
 
-   Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
-
-   Oracle is a registered trademark of Oracle Corporation and/or its
-   affiliates. Other names may be trademarks of their respective
-   owners.
+   Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
 
    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
    ```
@@ -537,17 +516,16 @@ A named volume can be created on the command line, in a docker-compose file, and
 5. Create a new table
 
    ```
-   mysql> connect sample;
-   Connection id:    4
-   Current database: sample
+   MariaDB [(none)]> use sample;
+   Database changed
 
-   mysql> show tables;
+   MariaDB [sample]> show tables;
    Empty set (0.00 sec)
 
-   mysql> create table user(name varchar(50));
+   MariaDB [sample]> create table user(name varchar(50));
    Query OK, 0 rows affected (0.01 sec)
 
-   mysql> show tables;
+   MariaDB [sample]> show tables;
    +------------------+
    | Tables_in_sample |
    +------------------+
@@ -556,55 +534,50 @@ A named volume can be created on the command line, in a docker-compose file, and
    1 row in set (0.00 sec)
    ```
 
-6. Exit MySQL and the MySQL container.
+6. Exit MariaDB and the MariaDB container.
 
    ```
-   mysql> exit
+   MariaDB [sample]> exit
    Bye
 
    root@132f4b3ec0dc:/# exit
    exit
    ```
 
-7. Remove the MySQL container
+7. Remove the MariaDB container
 
    ```
-   $ docker container rm --force mysqldb
+   $ docker container rm --force mariadb
    ```
 
-   Because the MySQL was writing out to a named volume, we can start a new container with the same data.
+   Because MariaDB was writing out to a named volume, we can start a new container with the same data.
 
    When the container starts it will not overwrite existing data in a volume. So the data created in the previous steps will be left intact and mounted into the new container.
 
-8. Start a new MySQL container
+8. Start a new MariaDB container
 
    ```
-   $ docker run --name new_mysqldb \
-   -e MYSQL_USER=mysql \
-   -e MYSQL_PASSWORD=mysql \
-   -e MYSQL_DATABASE=sample \
-   -e MYSQL_ROOT_PASSWORD=supersecret \
+   $ docker run --name new_mariadb \
+   -e MARIADB_USER=dbuser \
+   -e MARIADB_PASSWORD=dbpass \
+   -e MARIADB_DATABASE=sample \
+   -e MARIADB_ROOT_PASSWORD=supersecret \
    --detach \
    --mount type=volume,source=mydbdata,target=/var/lib/mysql \
-   mysql
+   mariadb:11
    ```
 
-9. Shell into your running MySQL container and log into MySQL
+9. Shell into your running MariaDB container and log into MariaDB
 
    ```
-   $ docker exec --tty --interactive new_mysqldb bash
+   $ docker exec --tty --interactive new_mariadb bash
 
-   root@132f4b3ec0dc:/# mysql --user=mysql --password=mysql
-   mysql: [Warning] Using a password on the command line interface can be insecure.
-   Welcome to the MySQL monitor.  Commands end with ; or \g.
-   Your MySQL connection id is 3
-   Server version: 5.7.19 MySQL Community Server (GPL)
+   root@132f4b3ec0dc:/# mariadb --user=dbuser --password=dbpass
+   Welcome to the MariaDB monitor.  Commands end with ; or \g.
+   Your MariaDB connection id is 3
+   Server version: 11.4.2-MariaDB-ubu2404 mariadb.org binary distribution
 
-   Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
-
-   Oracle is a registered trademark of Oracle Corporation and/or its
-   affiliates. Other names may be trademarks of their respective
-   owners.
+   Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
 
    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
    ```
@@ -612,14 +585,13 @@ A named volume can be created on the command line, in a docker-compose file, and
 10. Check to see if the previously created table exists in your new container.
 
     ```
-    mysql> connect sample;
+    MariaDB [(none)]> use sample;
     Reading table information for completion of table and column names
     You can turn off this feature to get a quicker startup with -A
 
-    Connection id:    4
-    Current database: sample
+    Database changed
 
-    mysql> show tables;
+    MariaDB [sample]> show tables;
     +------------------+
     | Tables_in_sample |
     +------------------+
@@ -630,21 +602,21 @@ A named volume can be created on the command line, in a docker-compose file, and
 
     The data will exist until the volume is explicitly deleted.
 
-11. Exit MySQL and the MySQL container.
+11. Exit MariaDB and the MariaDB container.
 
     ```
-    mysql> exit
+    MariaDB [sample]> exit
     Bye
 
     root@132f4b3ec0dc:/# exit
     exit
     ```
 
-12. Remove the new MySQL container and volume
+12. Remove the new MariaDB container and volume
 
     ```
-    $ docker container rm --force new_mysqldb
-    new_mysqldb
+    $ docker container rm --force new_mariadb
+    new_mariadb
 
     $ docker volume rm mydbdata
     mydbdata

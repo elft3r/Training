@@ -53,7 +53,7 @@ What happened? Behind the scenes, a lot of stuff happened. When you call `docker
 1. The Docker daemon creates the container and then runs a command in that container
 1. The Docker daemon streams the output of the command to the Docker client
 
-When you run `docker container run alpine hostname`, you provided the command (`hostname`). Docker then started the container, executed the specified command in this container, and returned its hostname (`888e89a3b36``).
+When you run `docker container run alpine hostname`, you provided the command (`hostname`). Docker then started the container, executed the specified command in this container, and returned its hostname (`888e89a3b36`).
 
 1. Docker keeps a container running as long as the process started inside the container is still running. In this case, the hostname process completes when the output is written, so the container exits. The Docker platform doesn't delete resources by default, so the container still exists in the Exited state.
 

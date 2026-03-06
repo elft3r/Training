@@ -285,13 +285,13 @@ In this step you will remove all secrets and services,as well as clean up any ot
     <Snip>
     ```
 
-3. If you haven;t already done so, delete the file that you used as the source of the secret data in Step 1.
+3. If you haven't already done so, delete the file that you used as the source of the secret data in Step 1.
 
     ```
     $ rm sec.txt
     ```
 
-## Docker & Kuberenetes
+## Docker & Kubernetes
 
 A brief demo on Docker & Kubernetes
 
