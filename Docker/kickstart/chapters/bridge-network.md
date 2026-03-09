@@ -286,7 +286,7 @@ $ curl localhost:8080
 
 You can also access it from a web browser by navigating to `http://<your-docker-host-ip>:8080`.
 
-> **NOTE:** Port mapping uses port address translation (PAT) under the hood. Outbound traffic from containers is masqueraded/SNATed so it appears to come from the host's IP address.
+> **NOTE:** Port mapping uses **DNAT** (Destination NAT) under the hood — inbound connections arriving on host port 8080 are redirected to the container's port 80. Separately, **outbound** traffic from containers to the internet uses **SNAT/masquerade**, so it appears to originate from the host's IP address. This outbound masquerading applies to all bridge-connected containers, regardless of whether port mapping is configured.
 
 ## <a name="task_7"></a>Task 7: Cleanup
 
