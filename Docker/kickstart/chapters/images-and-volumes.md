@@ -18,7 +18,7 @@ The [Docker documentation](https://docs.docker.com/engine/userguide/storagedrive
 - These layers are added by each line in a Dockerfile
 - Images on the same host or registry will share layers if possible
 - When container is started it gets a unique writeable layer of its own to capture changes that occur while it's running
-- Layers exist on the host file system in some form (usually a directory, but not always) and are managed by a [storage driver](https://docs.docker.com/engine/userguide/storagedriver/selectadriver/) to present a logical filesystem in the running container.
+- Layers exist on the host file system in some form (usually a directory, but not always) and are managed by a [storage driver](https://docs.docker.com/engine/storage/drivers/) to present a logical filesystem in the running container.
 - When a container is removed the unique writeable layer (and everything in it) is removed as well
 - To persist data (and improve performance) Volumes are used.
 - Volumes (and the directories they are built on) are not managed by the storage driver, and will live on if a container is removed.
