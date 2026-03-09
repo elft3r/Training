@@ -321,7 +321,7 @@ NETWORK ID          NAME                DRIVER              SCOPE
 | **Isolation** | All containers share the same default network | Containers are isolated by network |
 | **Recommended** | No — use only for quick tests | Yes — use for all real workloads |
 | **Configuration** | Cannot be customized | Custom subnets, IP ranges, and gateways |
-| **Connect/disconnect** | Requires container restart | Live connect/disconnect with `docker network connect/disconnect` |
+| **Connect/disconnect** | Cannot disconnect running containers from primary (default) network | Live connect/disconnect with `docker network connect/disconnect` |
 
 **Best practices:**
 - Always create user-defined bridge networks for your applications
