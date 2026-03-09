@@ -335,4 +335,4 @@ Now place another vote `http://localhost:5000` and view the results `http://loca
 
 ### Next Steps
 
-For the next step in the tutorial, head over to [Docker Secrets](secrets.md)
+For the next step in the tutorial, head over to [Networking Basics](./networking-basics.md)

@@ -150,7 +150,7 @@ Now that we have pushed our project to GitHub, the next step is to enable [GitHu
 
 1. Generate a new Access Token on Docker Hub
 
-   Go to the [Docker Hub Account Settings -> Security](https://hub.docker.com/settings/security)
+   Go to the [Docker Hub -> Account Settings -> Personal access tokens](https://app.docker.com/settings/personal-access-tokens)
 
 2. Store the access token and further secrets in the GitHub Repository
 
