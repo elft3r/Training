@@ -12,13 +12,6 @@ You will complete the following steps as part of this lab.
 - [Task 6 - Configure port mapping for external access](#task_6)
 - [Task 7 - Cleanup](#task_7)
 
-## Prerequisites
-
-You will need all of the following to complete this lab:
-
-- A Docker host running Docker Engine 20.10 or higher
-- Basic familiarity with the `docker` CLI
-
 ## <a name="task_1"></a>Task 1: Explore the default bridge network
 
 Every Docker installation comes with three pre-built networks. List them with `docker network ls`.
@@ -34,6 +27,8 @@ ef4896538cc7        none                null                local
 The **bridge** network uses the *bridge* driver and is scoped locally (single-host only). It's important to note that the network name and the driver name are both "bridge", but they are not the same thing — one is a specific network, the other is the driver (template) used to create it.
 
 Under the hood, the *bridge* driver creates a Linux bridge (virtual switch) called **docker0** on the host. You can see it with the `ip` command.
+
+> **NOTE:** In order to execute this command, you need to be in the Linux system, that is running Docker.
 
 ```
 $ ip addr show docker0

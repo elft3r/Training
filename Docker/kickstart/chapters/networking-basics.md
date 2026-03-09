@@ -9,12 +9,6 @@ You will complete the following steps as part of this lab.
 - [Task 3 - Inspect a network](#inspect)
 - [Task 4 - Understand network drivers](#drivers)
 
-## Prerequisites
-
-You will need all of the following to complete this lab:
-
-- A Docker host running Docker Engine 20.10 or higher
-
 ## <a name="docker_network"></a>Task 1: The `docker network` command
 
 The `docker network` command is the main command for configuring and managing container networks.
@@ -23,7 +17,6 @@ Run `docker network --help` to see the available sub-commands.
 
 ```
 $ docker network --help
-
 Usage:  docker network COMMAND
 
 Manage networks
@@ -36,6 +29,8 @@ Commands:
   ls          List networks
   prune       Remove all unused networks
   rm          Remove one or more networks
+
+Run 'docker network COMMAND --help' for more information on a command.
 ```
 
 The key operations are: **create** and **rm** to manage networks, **connect** and **disconnect** to attach containers, and **inspect** and **ls** to view details.
@@ -71,11 +66,15 @@ $ docker network inspect bridge
 [
     {
         "Name": "bridge",
-        "Id": "1befe23acd58...",
+        "Id": "021ef0405d164d1fff9b6453fd7015dee7bcc9fa4f2d0166cbadac3db3fa0c3b",
+        "Created": "2026-03-07T18:21:12.273457708Z",
         "Scope": "local",
         "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
         "IPAM": {
             "Driver": "default",
+            "Options": null,
             "Config": [
                 {
                     "Subnet": "172.17.0.0/16",
@@ -83,19 +82,29 @@ $ docker network inspect bridge
                 }
             ]
         },
-        "Containers": {},
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
         "Options": {
             "com.docker.network.bridge.default_bridge": "true",
             "com.docker.network.bridge.enable_icc": "true",
             "com.docker.network.bridge.enable_ip_masquerade": "true",
-            "com.docker.network.bridge.name": "docker0"
+            "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+            "com.docker.network.bridge.name": "docker0",
+            "com.docker.network.driver.mtu": "65535"
         },
-        ...
+        "Labels": {},
+        "Containers": {}
     }
 ]
 ```
 
 Key things to notice:
+
 - The **Subnet** (`172.17.0.0/16`) defines the IP range available to containers
 - The **Gateway** (`172.17.0.1`) is the IP of the Linux bridge (`docker0`) on the host
 - **enable_ip_masquerade** means containers can reach the internet through NAT
@@ -125,4 +134,5 @@ $ docker info --format '{{.Plugins.Network}}'
 For the kickstart workshop, we'll focus on the **bridge** driver since it's the most commonly used and the foundation for understanding Docker networking.
 
 ## Next Steps
+
 For the next step in the tutorial, head over to [Bridge Networking](./bridge-network.md)
