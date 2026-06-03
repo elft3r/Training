@@ -24,6 +24,8 @@ main:
     url: /DockerCon/
   - title: "DevOpsDays"
     url: /DevOpsDays/
+  - title: "GitHub"
+    url: "https://github.com/elft3r/training"
 
 docker-kickstart:
   - title: "Docker Kickstart"

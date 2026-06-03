@@ -36,6 +36,9 @@ repository: "elft3r/training"
 # Footer
 footer:
   links:
+    - label: "GitHub"
+      url: "https://github.com/elft3r/training"
+      icon: "fab fa-github"
     - label: "Licensed under Apache 2.0"
       url: "https://github.com/elft3r/training/blob/main/LICENSE"
 
