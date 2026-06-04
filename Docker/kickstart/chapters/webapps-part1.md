@@ -116,4 +116,4 @@ Let's re-run the command with some new flags to publish ports and pass your name
 
 ## Next Steps
 
-For the next step in the tutorial, head over to [Docker Images and Volumes](./images-and-volumes.md)
+For the next step in the tutorial, head over to [Docker Images](./images.md)

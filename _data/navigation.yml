@@ -37,10 +37,12 @@ docker-kickstart:
         url: /Docker/kickstart/chapters/alpine.html
       - title: "Webapps with Docker - Part One"
         url: /Docker/kickstart/chapters/webapps-part1.html
-      - title: "Images and Volumes"
-        url: /Docker/kickstart/chapters/images-and-volumes.html
+      - title: "Docker Images"
+        url: /Docker/kickstart/chapters/images.html
       - title: "Multi-Stage Builds"
         url: /Docker/kickstart/chapters/multistage-builds.html
+      - title: "Docker Volumes"
+        url: /Docker/kickstart/chapters/volumes.html
       - title: "Webapps with Docker - Part Two"
         url: /Docker/kickstart/chapters/webapps-part2.html
       - title: "Docker & DevOps"

@@ -3,7 +3,7 @@
 
 # Multi-Stage Builds
 
-Now that you understand Docker images, layers, and volumes, it's time to learn one of the most important techniques for building production-ready images: **multi-stage builds**.
+Now that you understand Docker images and layers, it's time to learn one of the most important techniques for building production-ready images: **multi-stage builds**.
 
 When you build an application inside a Docker image, you often need compilers, build tools, and development dependencies that are not needed at runtime. A single-stage build includes all of that in the final image, making it unnecessarily large. Multi-stage builds solve this by letting you use multiple `FROM` statements in a single Dockerfile — each one starts a new build stage, and you can selectively copy artifacts from one stage into another.
 
@@ -364,4 +364,4 @@ Sometimes you want to build only up to a certain stage — for example, to run t
 
 ## Next Steps
 
-For the next step in the tutorial, head over to [Webapps with Docker - Part Two](./webapps-part2.md)
+For the next step in the tutorial, head over to [Docker Volumes](./volumes.md)
