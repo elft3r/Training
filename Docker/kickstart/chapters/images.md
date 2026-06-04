@@ -14,7 +14,7 @@ Great! So you have now looked at `docker container run`, played with Docker cont
 
 In this section, we dive into Docker images. You will build your own image, use that image to run an application locally, and finally, push the newly created images to Docker Hub.
 
-The [Docker documentation](https://docs.docker.com/engine/userguide/storagedriver/imagesandcontainers/) gives a great explanation on how storage works with Docker images and containers, but here's the highlights.
+The [Docker documentation](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/) gives a great explanation on how image layers work, but here's the highlights.
 
 - Images are comprised of layers
 - These layers are added by each line in a Dockerfile
@@ -165,7 +165,7 @@ Another key concept is the idea of _official images_ and _user images_. (Both of
 
    <center><img src="../images/overlay_constructs.jpg" title="Overlay Constructs"></center>
 
-   Our Docker host utilizes OverlayFS with the [overlay2](https://docs.docker.com/engine/userguide/storagedriver/overlayfs-driver/#how-the-overlay2-driver-works) storage driver.
+   Our Docker host utilizes OverlayFS with the [overlay2](https://docs.docker.com/engine/storage/drivers/overlayfs-driver/) storage driver.
 
    OverlayFS layers two directories on a single Linux host and presents them as a single directory. These directories are called layers and the unification process is referred to as a union mount. OverlayFS refers to the lower directory as lowerdir and the upper directory a upperdir. "Upper" and "Lower" refer to when the layer was added to the image. In our example the writeable layer is the most "upper" layer. The unified view is exposed through its own directory called merged.
 
