@@ -12,16 +12,16 @@ Great! So you have now looked at `docker container run`, played with Docker cont
 
 ## Task 1: Docker Images
 
-In this section, we dive into Docker images. You will build your own image, use that image to run an application locally, and finally, push the newly created images to Docker Hub.
+In this section, we dive into Docker images — how they are structured, how layers work, and how images are shared and managed on a Docker host.
 
-The [Docker documentation](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/) gives a great explanation on how image layers work, but here's the highlights.
+The [Docker documentation](https://docs.docker.com/get-started/docker-concepts/building-images/understanding-image-layers/) gives a great explanation of how image layers work, but here are the highlights.
 
 - Images are comprised of layers
 - These layers are added by each line in a Dockerfile
 - Images on the same host or registry will share layers if possible
-- When container is started it gets a unique writeable layer of its own to capture changes that occur while it's running
+- When a container is started it gets a unique writable layer of its own to capture changes that occur while it's running
 - Layers exist on the host file system in some form (usually a directory, but not always) and are managed by a [storage driver](https://docs.docker.com/engine/storage/drivers/) to present a logical filesystem in the running container.
-- When a container is removed the unique writeable layer (and everything in it) is removed as well
+- When a container is removed the unique writable layer (and everything in it) is removed as well
 
 A Docker image is built up from a series of layers. Each layer represents an instruction in the image's Dockerfile. Each layer except the very last one is read-only. Consider the following Dockerfile:
 
@@ -36,7 +36,7 @@ This Dockerfile contains four commands, each of which creates a layer. The `FROM
 
 <center><img src="../images/container-layers.jpg" title="Container Layers"></center>
 
-Multiple Containers can use the same Image. Each container has its own writable container layer, and all changes are stored in this container layer, multiple containers can share access to the same underlying image and yet have their own data state. The diagram below shows multiple containers sharing the same Debian image.
+Multiple containers can use the same image. Each container has its own writable layer where all changes are stored, but they share access to the same underlying image layers and maintain their own data state. The diagram below shows multiple containers sharing the same Debian image.
 
 <center><img src="../images/sharing-layers.jpg" title="Sharing Layers"></center>
 
@@ -136,7 +136,7 @@ Another key concept is the idea of _official images_ and _user images_. (Both of
 
    The first line in the Dockerfile is: `FROM debian:bookworm-slim` This will import that layer into the PostgreSQL image.
 
-   So layers are created by the Dockerfile and are shared between images. When you start a container, a writeable layer is added to the base image.
+   So layers are created by the Dockerfile and are shared between images. When you start a container, a writable layer is added to the base image.
 
    Next you will create a file in our container, and see how that's represented on the host file system.
 
@@ -159,7 +159,7 @@ Another key concept is the idea of _official images_ and _user images_. (Both of
 
    We can see `test-file` exists in the root of the container's file system.
 
-   What has happened is that when a new file was written to the disk, the Docker storage driver placed that file in its own layer. This is called _copy on write_ - as soon as a change is detected the change is copied into the writeable layer. That layer is represented by a directory on the host file system. All of this is managed by the Docker storage driver.
+   What has happened is that when a new file was written to the disk, the Docker storage driver placed that file in its own layer. This is called _copy on write_ - as soon as a change is detected the change is copied into the writable layer. That layer is represented by a directory on the host file system. All of this is managed by the Docker storage driver.
 
 5. Exit the container but leave it running by pressing `ctrl-p` and then `ctrl-q`
 
@@ -167,7 +167,7 @@ Another key concept is the idea of _official images_ and _user images_. (Both of
 
    Our Docker host utilizes OverlayFS with the [overlay2](https://docs.docker.com/engine/storage/drivers/overlayfs-driver/) storage driver.
 
-   OverlayFS layers two directories on a single Linux host and presents them as a single directory. These directories are called layers and the unification process is referred to as a union mount. OverlayFS refers to the lower directory as lowerdir and the upper directory a upperdir. "Upper" and "Lower" refer to when the layer was added to the image. In our example the writeable layer is the most "upper" layer. The unified view is exposed through its own directory called merged.
+   OverlayFS layers two directories on a single Linux host and presents them as a single directory. These directories are called layers and the unification process is referred to as a union mount. OverlayFS refers to the lower directory as lowerdir and the upper directory an upperdir. "Upper" and "Lower" refer to when the layer was added to the image. In our example the writable layer is the most "upper" layer. The unified view is exposed through its own directory called merged.
 
 6. Stop the container
 
