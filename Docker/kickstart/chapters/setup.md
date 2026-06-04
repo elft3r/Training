@@ -46,7 +46,11 @@ This message shows that your installation appears to be working correctly.
 You will need Git to clone repositories during the exercises. Install one:
 
 - **[Git CLI](https://git-scm.com/downloads)** — works in any terminal
-- **[GitHub Desktop](https://desktop.github.com/)** — graphical client
+  > GitHub requires a **Personal Access Token (PAT)** instead of your password for HTTPS git operations. To create one: go to **Settings → Developer settings → Personal access tokens → Tokens (classic)**, generate a token with the **`repo`** scope, and use it in place of your password when git prompts you. To avoid re-entering it on every push, run:
+  > ```console
+  > $ git config --global credential.helper cache
+  > ```
+- **[GitHub Desktop](https://desktop.github.com/)** — graphical client; handles GitHub authentication automatically via browser login, no PAT needed
 
 **Verify:**
 
