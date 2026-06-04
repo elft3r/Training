@@ -35,11 +35,6 @@ _Commands in this course work in bash and in PowerShell on Windows._
 
 ```console
 $ docker container run hello-world
-```
-
-You should see:
-
-```
 Hello from Docker!
 This message shows that your installation appears to be working correctly.
 ```
@@ -48,7 +43,7 @@ This message shows that your installation appears to be working correctly.
 
 ## 2. Git Client
 
-You will need git to clone repositories during the exercises. Install one:
+You will need Git to clone repositories during the exercises. Install one:
 
 - **[Git CLI](https://git-scm.com/downloads)** — works in any terminal
 - **[GitHub Desktop](https://desktop.github.com/)** — graphical client
