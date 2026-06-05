@@ -5,7 +5,7 @@
 
 This Docker tutorial consists of the following sections:
 
-- [Setup - Validating Installation](chapters/setup.md)
+- [Before You Start](chapters/setup.md)
 - [Running your first container](chapters/alpine.md)
 - [Webapps with Docker - Part One](chapters/webapps-part1.md)
 - [Docker Images](chapters/images.md)

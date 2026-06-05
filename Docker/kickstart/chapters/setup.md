@@ -1,42 +1,92 @@
 ---
 ---
 
-# Setup
+# Before You Start
 
-In this chapter you'll get Docker installed and verify that everything is working correctly.
+Welcome to the Docker Kickstart course! The course starts with a theoretical introduction to containers and Docker, followed by extensive hands-on exercises reinforced by additional theory throughout.
 
-> **Tasks:**
+Before the course begins, work through this page to make sure your system is ready.
+
+> **Course Materials**
 >
-> - [Task 1: Setting up your computer](#task-1-setting-up-your-computer)
+> The slides used during the course are available here: [Docker Training Presentation](https://elft3r.github.io/presentations/docker-training/)
 
-## Prerequisites
+## Checklist
 
-There are no specific skills needed for this tutorial beyond a basic comfort with the command line and using a text editor. Prior experience in developing web applications will be helpful but is not required.
+- [ ] Docker Desktop installed and running
+- [ ] Git client installed
+- [ ] IDE / text editor installed
+- [ ] GitHub account created
+- [ ] Docker Hub account created
 
-## Task 1: Setting up your computer
+---
 
-Getting all the tooling setup on your computer can be a daunting task, but getting Docker up and running on your favorite OS has become very easy.
+## 1. Docker Desktop
 
-The _getting started_ guide on Docker has detailed instructions for setting up Docker on [Mac](https://docs.docker.com/desktop/setup/install/mac-install/), [Linux](https://docs.docker.com/desktop/setup/install/linux-install/) and [Windows](https://docs.docker.com/desktop/setup/install/windows-install/).
+All exercises are built around Docker Desktop. Install it for your OS:
 
-_All commands work in either bash or Powershell on Windows_
+- [Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
+- [Linux](https://docs.docker.com/desktop/setup/install/linux-install/)
+- [Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
 
-Once you are done installing Docker, test your Docker installation by running the following:
+_Commands in this course work in bash and in PowerShell on Windows._
+
+**Verify the installation:**
 
 ```console
 $ docker container run hello-world
-Unable to find image 'hello-world:latest' locally
-latest: Pulling from library/hello-world
-03f4658f8b78: Pull complete
-a3ed95caeb02: Pull complete
-Digest: sha256:8be990ef2aeb16dbcb9271ddfe2610fa6658d13f6dfb8bc72074cc1ca36966a7
-Status: Downloaded newer image for hello-world:latest
-
-Hello from Docker.
+Hello from Docker!
 This message shows that your installation appears to be working correctly.
-...
 ```
+
+---
+
+## 2. Git Client
+
+You will need Git to clone repositories during the exercises. Install one:
+
+- **[Git CLI](https://git-scm.com/downloads)** — works in any terminal
+  > GitHub requires a **Personal Access Token (PAT)** instead of your password for HTTPS git operations. Create a **fine-grained PAT** under **Settings → Developer settings → Personal access tokens → Fine-grained tokens**: select the repositories you need and grant **Contents: Read and Write** access. Use the token in place of your password when git prompts you.
+  >
+  > To store the token securely across sessions, install [Git Credential Manager](https://github.com/git-ecosystem/git-credential-manager) (included with Git for Windows; available separately for macOS and Linux).
+- **[GitHub Desktop](https://desktop.github.com/)** — graphical client; handles GitHub authentication automatically via browser login, no PAT needed
+
+**Verify:**
+
+```console
+$ git --version
+git version 2.x.x
+```
+
+---
+
+## 3. IDE / Text Editor
+
+Any editor works. Recommendations:
+
+- **[Visual Studio Code](https://code.visualstudio.com/)** — free, cross-platform, with an excellent [Docker extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
+- Any editor you are already comfortable with
+
+---
+
+## 4. GitHub Account
+
+You will need a [GitHub](https://github.com/) account to clone and push repositories during the exercises.
+
+→ [Create a free account](https://github.com/signup)
+
+---
+
+## 5. Docker Hub Account
+
+You will need a [Docker Hub](https://hub.docker.com/) account to pull and push container images.
+
+→ [Create a free account](https://hub.docker.com/signup)
+
+---
 
 ## Next Steps
 
-For the next step in the tutorial, head over to [Running your first container](./alpine.md)
+Once all five items are checked off, you're ready to go.
+
+Head over to [Running your first container](./alpine.md) to begin!

@@ -31,7 +31,7 @@ docker-kickstart:
   - title: "Docker Kickstart"
     url: /Docker/kickstart/
     children:
-      - title: "Setup"
+      - title: "Before You Start"
         url: /Docker/kickstart/chapters/setup.html
       - title: "Running your first container"
         url: /Docker/kickstart/chapters/alpine.html
